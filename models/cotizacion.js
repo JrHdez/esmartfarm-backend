@@ -16,7 +16,12 @@ Cotizacion.findByUser = (id_user) => {
             toneladas,
             origen,
             destino,
-            costo,
+            inversion_inicial,
+            preparacion_suelo,
+            sostenimiento_cultivo,
+            cosecha,
+            post_cosecha,
+            costo_transporte,
             medio
         FROM
             cotizaciones
@@ -36,18 +41,26 @@ Cotizacion.create = (cotizacion) => {
                 tecnologias,
                 estado_via,
                 ubicacion,
+                compraArriendo,
+                departamento,
+                altura,
                 coordenadas,
                 toneladas,
                 origen,
                 destino,
-                costo,
+                inversion_inicial,
+                preparacion_suelo,
+                sostenimiento_cultivo,
+                cosecha,
+                post_cosecha,
+                costo_transporte,
                 medio,
                 created_at,
                 updated_at
             )   
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) RETURNING id
         `;
-
+            console.log(cotizacion);
     return db.oneOrNone(sql, [
         cotizacion.id_user,
         cotizacion.product,
@@ -55,11 +68,19 @@ Cotizacion.create = (cotizacion) => {
         cotizacion.tecnologias,
         cotizacion.estado_via,
         cotizacion.ubicacion,
+        cotizacion.compra_arriendo,
+        cotizacion.departamento,
+        cotizacion.altura,
         cotizacion.coordenadas,
         cotizacion.toneladas,
         cotizacion.origen,
         cotizacion.destino,
-        cotizacion.costo,
+        cotizacion.inversion_inicial,
+        cotizacion.preparacion_suelo,
+        cotizacion.sostenimiento_cultivo,
+        cotizacion.cosecha,
+        cotizacion.post_cosecha,
+        cotizacion.costo_transporte,
         cotizacion.medio,
         new Date(),
         new Date()

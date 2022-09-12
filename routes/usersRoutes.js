@@ -19,11 +19,14 @@ module.exports = (app, upload) => {
     app.post('/api/costos/doble_troque',CostsController.queryDobleTroque);
     app.post('/api/costos/camion_sencillo',CostsController.queryCamionSencillo);
     app.get('/api/costos/products/:product',CostsController.productCosts);
-    app.post('/api/costos/invInicial',ModeloNegocioController.inversionInicial);
-    app.post('/api/costos/prepSuelo',ModeloNegocioController.preparacionSuelo);
-    app.post('/api/costos/sostCultivo',ModeloNegocioController.sostenimientoCultivo);
-    
-
+    // app.post('/api/costos/invInicial',ModeloNegocioController.inversionInicial);
+    // app.post('/api/costos/prepSuelo',ModeloNegocioController.preparacionSuelo);
+    // app.post('/api/costos/sostCultivo',ModeloNegocioController.sostenimientoCultivo);
+    // app.post('/api/costos/cosecha',ModeloNegocioController.cosecha);
+    // app.post('/api/costos/postCosecha',ModeloNegocioController.postCosecha);
+    // app.post('/api/costos/transporte',ModeloNegocioController.transporte);
+    app.post('/api/costos/modeloNegocio',ModeloNegocioController.modeloNegocio);
+    app.post('/api/costos/getExtraCosts',ModeloNegocioController.getExtraCosts);
 
 
     app.get('/api/products/getAllName/',ProductsController.getAllName);

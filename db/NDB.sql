@@ -64,14 +64,16 @@ DROP TABLE IF EXISTS empaques CASCADE;
 CREATE TABLE empaques(
 	id BIGSERIAL PRIMARY KEY,
 	empaque VARCHAR(255) NOT NULL,
-	dimensiones VARCHAR(255) NOT NULL,
-	material VARCHAR(80) NULL,
-	resistencia VARCHAR(80) NOT NULL,
-	created_at TIMESTAMP(0) NOT NULL,
-	updated_at TIMESTAMP(0) NOT NULL
+	producto VARCHAR(100) NOT NULL,
+	dimensiones VARCHAR(255) NULL,
+	resistencia VARCHAR(80) NULL,
+	costoxhectarea FLOAT NOT NULL,
+	FOREIGN KEY(producto) REFERENCES producto(producto) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
-INSERT INTO empaques (empaque,dimensiones,material,requisitos,created_at,updated_at) VALUES ('Caja','50x50','Cartón','Baja','2022-01-11','2022-01-11');
+INSERT INTO empaques VALUES(1,'Malla','Uchuva','30x30x30','Alta',50000);
+INSERT INTO empaques VALUES(2,'Costal','Papa','30x30x30','Debil',35000);
+INSERT INTO empaques VALUES(3,'Canasto','Piña','30x30x30','Media',200000);
+--ACt
 
 DROP TABLE IF EXISTS transporte CASCADE;
 CREATE TABLE transporte(
@@ -138,7 +140,7 @@ CREATE TABLE proveedores(
 DROP TABLE IF EXISTS producto CASCADE;
 Create table producto (
 	id bigserial primary key,
-    producto VARCHAR(50) NULL, 
+    producto VARCHAR(50) NULL UNIQUE, 
 	tiempo_preparacion int null,
 	tiempo_sostenimiento int null,
 	tiempo_cosecha int null,
@@ -150,9 +152,9 @@ Create table producto (
 	altura_max int null
 );
 
-INSERT INTO products VALUES(1,'Piña',10,540,10,4,4,3,10,1200,1800);
-INSERT INTO products VALUES(2,'Papa',5,115,10,5,25,5,12,2100,3100);
-INSERT INTO products VALUES(3,'Uchuva',15,120,10,5,15,2,14,1800,2800);
+INSERT INTO producto VALUES(1,'Piña',10,540,10,4,4,3,10,1200,1800);
+INSERT INTO producto VALUES(2,'Papa',5,115,10,5,25,5,12,2100,3100);
+INSERT INTO producto VALUES(3,'Uchuva',15,120,10,5,15,2,14,1800,2800);
 
 
 
@@ -171,8 +173,8 @@ INSERT INTO products VALUES(3,'Uchuva',15,120,10,5,15,2,14,1800,2800);
 
 
 
-DROP TABLE IF EXISTS productos.pina CASCADE;
-Create table productos.pina (
+DROP TABLE IF EXISTS productos.piña CASCADE;
+Create table productos.piña (
     no_registro VARCHAR(1000) NULL, 
 	fecha_otorgado_noresulocion VARCHAR(1000) NULL,
     nombre VARCHAR(1000) NULL,
@@ -194,8 +196,8 @@ Create table productos.pina (
 	numero_aplicaciones VARCHAR(1000) NULL,
 	costo_total FLOAT NULL
 );
- COPY productos.pina FROM 'C:\PSQL\pina.csv' DELIMITER ';' CSV HEADER;
-  ALTER TABLE IF EXISTS productos.pina
+ COPY productos.piña FROM 'C:\PSQL\pina.csv' DELIMITER ';' CSV HEADER;
+  ALTER TABLE IF EXISTS productos.piña
     ADD COLUMN id bigserial primary key; 
   
 
@@ -329,94 +331,56 @@ COPY public.producto FROM 'C:\PSQL\producto.csv' DELIMITER ';' CSV HEADER;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-DROP TABLE IF EXISTS productos.uchuva CASCADE;
-Create table productos.uchuva (
-    no_registro VARCHAR(1000) NULL, 
-	fecha_otorgado_noresulocion VARCHAR(1000) NULL,
-    nombre VARCHAR(1000) NULL,
-	clase_insumo VARCHAR(1000) NULL,
-	nombre_empresa VARCHAR(1000) NULL,
-	nit_empresa VARCHAR(1000) NULL,
-	ingrediente_activo VARCHAR(1000) NULL,
-	concentracion VARCHAR(1000) NULL,
-	cat_toxic VARCHAR(1000) NULL,
-	clase VARCHAR(1000) NULL,
-	tipo_for VARCHAR(1000) NULL,
-	costo_unitario float NULL,
-	presentacion VARCHAR(1000) NULL,
-	unidad VARCHAR(1000) NULL,
-	cantidad_hectarea VARCHAR(1000) NULL,
-	costo_hectarea float NULL,
-	frecuencia_aplicacion VARCHAR(1000) NULL,
-	tiempo_fase VARCHAR(1000) NULL,
-	numero_aplicaciones VARCHAR(1000) NULL,
-	costo_total FLOAT NULL
+ DROP TABLE IF EXISTS precioProductoPais CASCADE;
+Create table productos.precioProductoPais (
+    pais VARCHAR(40) NULL,
+	PIÑA FLOAT NULL,
+	UCHUVA FLOAT NULL,
+	PAPA FLOAT NULL
 );
-COPY productos.uchuva FROM 'C:\PSQL\uchuva.csv' DELIMITER ';' CSV HEADER;
-ALTER TABLE IF EXISTS productos.uchuva
-    ADD COLUMN id bigserial primary key; 
-	
-	DROP TABLE IF EXISTS productos.papa CASCADE;
-Create table productos.papa (
-    no_registro VARCHAR(1000) NULL, 
-	fecha_otorgado_noresulocion VARCHAR(1000) NULL,
-    nombre VARCHAR(1000) NULL,
-	clase_insumo VARCHAR(1000) NULL,
-	nombre_empresa VARCHAR(1000) NULL,
-	nit_empresa VARCHAR(1000) NULL,
-	ingrediente_activo VARCHAR(1000) NULL,
-	concentracion VARCHAR(1000) NULL,
-	cat_toxic VARCHAR(1000) NULL,
-	clase VARCHAR(1000) NULL,
-	tipo_for VARCHAR(1000) NULL,
-	costo_unitario FLOAT NULL,
-	presentacion VARCHAR(1000) NULL,
-	unidad VARCHAR(1000) NULL,
-	cantidad_hectarea VARCHAR(1000) NULL,
-	costo_hectarea FLOAT NULL,
-	frecuencia_aplicacion VARCHAR(1000) NULL,
-	tiempo_fase VARCHAR(1000) NULL,
-	numero_aplicaciones VARCHAR(1000) NULL,
-	costo_total FLOAT NULL
+
+INSERT INTO productos.precioProductoPais VALUES('PERU',100,0,0)
+INSERT INTO productos.precioProductoPais VALUES('ESTADOS UNIDOS',100,0,0);
+INSERT INTO productos.precioProductoPais VALUES('EMIRATOS ARABES',150,70,60);
+INSERT INTO productos.precioProductoPais VALUES('INGLATERRA',140,80,20);
+INSERT INTO productos.precioProductoPais VALUES('PERU',100,20,10);
+
+ DROP TABLE IF EXISTS certificacionesExp CASCADE;
+Create table productos.precioProductoPais (
+    pais VARCHAR(40) NULL,
+	PIÑA FLOAT NULL,
+	UCHUVA FLOAT NULL,
+	PAPA FLOAT NULL
 );
- COPY productos.papa FROM 'C:\PSQL\papa.csv' DELIMITER ';' CSV HEADER;
- ALTER TABLE IF EXISTS productos.papa
-    ADD COLUMN id bigserial primary key; 
-	
-	DROP TABLE IF EXISTS productos.piña CASCADE;
-Create table productos.piña (
-    no_registro VARCHAR(1000) NULL, 
-	fecha_otorgado_noresulocion VARCHAR(1000) NULL,
-    nombre VARCHAR(1000) NULL,
-	clase_insumo VARCHAR(1000) NULL,
-	nombre_empresa VARCHAR(1000) NULL,
-	nit_empresa VARCHAR(1000) NULL,
-	ingrediente_activo VARCHAR(1000) NULL,
-	concentracion VARCHAR(1000) NULL,
-	cat_toxic VARCHAR(1000) NULL,
-	clase VARCHAR(1000) NULL,
-	tipo_for VARCHAR(1000) NULL,
-	costo_unitario FLOAT NULL,
-	presentacion VARCHAR(1000) NULL,
-	unidad VARCHAR(1000) NULL,
-	cantidad_hectarea VARCHAR(1000) NULL,
-	costo_hectarea FLOAT NULL,
-	frecuencia_aplicacion VARCHAR(1000) NULL,
-	tiempo_fase VARCHAR(1000) NULL,
-	numero_aplicaciones VARCHAR(1000) NULL,
-	costo_total VARCHAR(1000) NULL
+
+INSERT INTO productos.precioProductoPais VALUES('PERU',100,0,0)
+INSERT INTO productos.precioProductoPais VALUES('ESTADOS UNIDOS',100,0,0);
+INSERT INTO productos.precioProductoPais VALUES('EMIRATOS ARABES',150,70,60);
+INSERT INTO productos.precioProductoPais VALUES('INGLATERRA',140,80,20);
+INSERT INTO productos.precioProductoPais VALUES('PERU',100,20,10);
+
+
+DROP TABLE IF EXISTS certificaciones CASCADE;
+CREATE TABLE certificacionesPais(
+	-- id BIGSERIAL PRIMARY KEY,
+	certificacion VARCHAR(255) NOT NULL,
+	pais VARCHAR(40) NULL,
+	cultivo VARCHAR(255) NOT NULL,
+	costo VARCHAR(80) NULL,
+	requisitos VARCHAR(80) NOT NULL
+	-- created_at TIMESTAMP(0) NOT NULL,
+	-- updated_at TIMESTAMP(0) NOT NULL
 );
- COPY productos.piña FROM 'C:\PSQL\pina.csv' DELIMITER ';' CSV HEADER;
-  ALTER TABLE IF EXISTS productos.piña
-    ADD COLUMN id bigserial primary key; 
+
+INSERT INTO public.certificaciones VALUES()
+
+DROP TABLE IF EXISTS impuestos CASCADE;
+CREATE TABLE impuestos(
+	-- id BIGSERIAL PRIMARY KEY,
+	imppuesto VARCHAR(40) NOT NULL,
+	tasa FLOAT NOT NULL,
+);
+
+INSERT INTO public.impuestos VALUES('IVA',19);
+INSERT INTO public.impuestos VALUES('RENTA',32);
+INSERT INTO public.impuestos VALUES('RETEFUENTE',11);

@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
-app.use(cors());
+app.use(cors());  
 
 app.disable('x-powered-by');
 
@@ -45,7 +45,7 @@ app.set('port', port); //Confiturar puerto
 users(app,upload);
 
 // server.listen(3000,'192.168.10.19' || 'localhost', function(){
-server.listen(3000, function(){
+server.listen(port, function(){
     console.log('Aplicacion de NodeJS ' + port + ' Iniciada...')
 });
 

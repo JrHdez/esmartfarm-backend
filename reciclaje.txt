@@ -1,0 +1,203 @@
+  async inversionInicial(req, res, next){
+        try{
+            const cuotaInicialData = req.body;
+            const data = await ModeloNegocio.inversionInicial(cuotaInicialData);
+
+            // console.log('data',data);
+            const CI = parseFloat(data.avg) + parseFloat(data.sum);
+            // console.log(`Cotizacion ${JSON.stringify(data)}`);
+            // return res.status(201).json(data[0]);
+            return res.status(201).json({
+                message: 'Exito, data es el costo inicial de la inversion',
+                success: true,
+                data: CI
+            })
+            
+        }catch(error){
+            console.log(`Error al obtener inversion inicial ${error}`);
+            return res.status(501).json({
+                message: 'Hubo un error al tratar de obtener costos inversion inicial',
+                error: error,
+                success: false
+            })
+        }
+    },
+
+    async preparacionSuelo(req, res, next){
+        try{
+            const preparacionSuelo = req.body;
+            const data = await ModeloNegocio.preparacionSuelo(preparacionSuelo.product);
+
+            console.log('data',data);
+
+            const CS = (data.tiempo_preparacion / 30) * parseFloat(data.costo_hectarea_personal) + parseFloat(data.costo_insumos);
+
+            // console.log(`Cotizacion ${JSON.stringify(data)}`);
+            // return res.status(201).json(data[0]);
+            return res.status(201).json({
+                message: 'Exito, data es el costo de la preparacion del suelo',
+                success: true,
+                data: CS
+            })
+            
+        }catch(error){
+            console.log(`Error al obtener preparacion del suelo costos ${error}`);
+            return res.status(501).json({
+                message: 'Hubo un error al tratar de obtener costos preparacion del suelo',
+                error: error,
+                success: false
+            })
+        }
+    },
+
+    async sostenimientoCultivo(req, res, next){
+        try{
+            const sostenimientoCultivo = req.body;
+
+            const data = await ModeloNegocio.sostenimientoCultivo(sostenimientoCultivo.product, 'AGROQUIMICO', sostenimientoCultivo.compraArriendo, sostenimientoCultivo.departamento);
+            // console.log('data',data);
+            const sumar = Object.values(data.costo_insumos);
+
+            const sumaInsumosSostCultivoQuimico = sumar.reduce((a,b) => a + b, 0);
+
+            const sumaSostCultivoQuimico = sumaInsumosSostCultivoQuimico + data.otros_insumos + data.prom_arriendo;
+
+
+            if (this.sostenimientoCultivo.tipoCultivo == 'AGROQUIMICO'){
+                return res.status(201).json({
+                    message: `Exito, data es el costo del sostenimiento del cultivo agroquimico para ${this.sostenimientoCultivo.product}`,
+                    success: true,
+                    data: sumaSostCultivoQuimico 
+                });
+            }else{
+                // this.sostenimientoCultivo.tipoCultivo = 'AGROBIOLOGICO';
+                const data = await ModeloNegocio.sostenimientoCultivo(sostenimientoCultivo.product, 'AGROBIOLOGICO', sostenimientoCultivo.compraArriendo, sostenimientoCultivo.departamento);
+                const sumar = Object.values(data.costo_insumos);
+                const sumaSostCultivoAgrobio = sumar.reduce((a,b) => a + b, 0);
+
+                console.log('sumaagro',sumaSostCultivoAgrobio);
+
+                const sumaInsumosSostCultivo = parseFloat(sumaSostCultivoAgrobio) + parseFloat(sumaInsumosSostCultivoQuimico) * 0.4;
+
+                const sumaSostCultivo = sumaInsumosSostCultivo + data.otros_insumos + data.prom_arriendo;
+
+                return res.status(201).json({
+                    message: `Exito, data es el costo del sostenimiento del cultivo agrobiologico para ${this.sostenimientoCultivo.product}`,
+                    success: true,
+                    data: sumaSostCultivo 
+                }); 
+            }
+            
+
+            
+        }catch(error){
+            console.log(`Error al obtener preparacion del suelo costos ${error}`);
+            return res.status(501).json({
+                message: 'Hubo un error al tratar de obtener costos preparacion del suelo',
+                error: error,
+                success: false
+            })
+        }
+    },
+
+    async cosecha(req, res, next){
+        try{
+            cosecha = req.body;
+
+            const data = await ModeloNegocio.cosecha(cosecha.product, 'AGROQUIMICO', cosecha.compraArriendo, cosecha.departamento);
+            // console.log('data',data);
+            const sumar = Object.values(data.costo_insumos);
+
+            const sumaInsumoCosechaQuimico = sumar.reduce((a,b) => a + b, 0);
+
+            const sumaCosechaQuimico = sumaInsumoCosechaQuimico + data.otros_insumos + data.prom_arriendo;
+
+
+            if (this.cosecha.tipoCultivo == 'AGROQUIMICO'){
+                return res.status(201).json({
+                    message: `Exito, data es el costo del sostenimiento del cultivo agroquimico para ${this.cosecha.product}`,
+                    success: true,
+                    data: sumaCosechaQuimico 
+                });
+            }else{
+
+                const data = await ModeloNegocio.cosecha(cosecha.product, 'AGROBIOLOGICO', cosecha.compraArriendo, cosecha.departamento);
+                const sumar = Object.values(data.costo_insumos);
+                const sumaCosechaAgrobio = sumar.reduce((a,b) => a + b, 0);
+
+                console.log('sumaagro',sumaCosechaAgrobio);
+
+                const sumaInsumosSostCultivo = parseFloat(sumaCosechaAgrobio) + parseFloat(sumaInsumosSostCultivoQuimico) * 0.4;
+
+                const sumaSostCultivo = sumaInsumosSostCultivo + data.otros_insumos + data.prom_arriendo;
+
+                return res.status(201).json({
+                    message: `Exito, data es el costo del sostenimiento del cultivo agrobiologico para ${this.cosecha.product}`,
+                    success: true,
+                    data: sumaSostCultivo 
+                }); 
+            }
+            
+
+            
+        }catch(error){
+            console.log(`Error al obtener preparacion del suelo costos ${error}`);
+            return res.status(501).json({
+                message: 'Hubo un error al tratar de obtener costos preparacion del suelo',
+                error: error,
+                success: false
+            })
+        }
+    },
+
+    async postCosecha(req, res, next){
+        try{
+            const postCosecha = req.body;
+
+            const data = await ModeloNegocio.postCosecha(postCosecha.product, 'AGROQUIMICO', postCosecha.compraArriendo, postCosecha.departamento);
+             console.log('data',data);     
+
+            const sumaPostCosecha =  (data.tiempomax_postcosecha/30)*data.costo_hectarea_personal + data.otros_insumos + data.costo_empaque + data.prom_arriendo;
+            console.log('sumaPostCosecha',sumaPostCosecha);     
+
+            return res.status(201).json({
+                message: `Exito, data es el costo del sostenimiento del cultivo agroquimico para ${this.postCosecha.product}`,
+                success: true,
+                data: sumaPostCosecha 
+            });
+      
+        }catch(error){
+            console.log(`Error al obtener preparacion del suelo costos ${error}`);
+            return res.status(501).json({
+                message: 'Hubo un error al tratar de obtener costos preparacion del suelo',
+                error: error,
+                success: false
+            })
+        }
+    },
+
+    async transporte(req, res, next){
+        try{
+            const transporte = req.body;
+
+            const data = await ModeloNegocio.transporte(transporte.product, 'AGROQUIMICO', transporte.compraArriendo, transporte.departamento);
+             console.log('data',data);     
+
+            const sumaTransporte =  (data.tiempomax_transporte/30)*data.costo_hectarea_personal + data.otros_insumos + data.prom_arriendo;
+            console.log('sumaTransporte',sumaTransporte);     
+
+            return res.status(201).json({
+                message: `Exito, data es el costo del sostenimiento del cultivo agroquimico para ${this.transporte.product}`,
+                success: true,
+                data: sumaTransporte 
+            });
+      
+        }catch(error){
+            console.log(`Error al obtener preparacion del suelo costos ${error}`);
+            return res.status(501).json({
+                message: 'Hubo un error al tratar de obtener costos preparacion del suelo',
+                error: error,
+                success: false
+            })
+        }
+    }
