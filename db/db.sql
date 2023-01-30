@@ -1,38 +1,4 @@
--- DROP TABLE IF EXISTS roles CASCADE;
--- CREATE TABLE roles(
--- 	id BIGSERIAL PRIMARY KEY,
--- 	name VARCHAR(180) NOT NULL UNIQUE,
--- 	image VARCHAR(255) NULL,
--- 	route VARCHAR(255) NULL,
--- 	created_at TIMESTAMP(0) NOT NULL,
--- 	updated_at TIMESTAMP(0) NOT NULL
--- );
 
--- INSERT INTO roles (
--- 	name,
--- 	route,
--- 	created_at,
--- 	updated_at
--- )
--- VALUES (
--- 	'CLIENTE',
--- 	'client/products/list',
--- 	'2021-05-22',
--- 	'2021-05-22'
--- );
-
--- INSERT INTO roles (
--- 	name,
--- 	route,
--- 	created_at,
--- 	updated_at
--- )
--- VALUES (
--- 	'ADMINISTRADOR',
--- 	'admin/clients/list',
--- 	'2021-05-22',
--- 	'2021-05-22'
--- );
 
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
